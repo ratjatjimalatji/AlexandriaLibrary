@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "58343024063",
+    "project_id": "libraryreader-ae1f1",
+    "storage_bucket": "libraryreader-ae1f1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:58343024063:android:bb7b1452ffead899902d0a",
+        "android_client_info": {
+          "package_name": "com.example.libraryreader"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpTToP4cCe05w45ruWSHu47x7yFjpqp04"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
