@@ -59,8 +59,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ReaderApp(){
-    Surface(modifier = Modifier.fillMaxSize()
-        ,
+    Surface(modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background) {
 Column(verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally) {
