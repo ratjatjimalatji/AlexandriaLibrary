@@ -13,7 +13,9 @@ import com.example.libraryreader.screens.update.Update
 @Composable
 fun ReaderNavigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = ReaderScreens.SplashScreen.name){
+    NavHost(navController = navController,
+        startDestination = ReaderScreens.SplashScreen.name // The application opens the splash screen upon app start
+    ){
 
 
         composable(ReaderScreens.SplashScreen.name) {
