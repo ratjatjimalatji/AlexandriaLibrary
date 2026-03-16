@@ -17,7 +17,9 @@ import com.example.libraryreader.ui.theme.LibraryReaderTheme
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint // MainActivity will receive all dependency injections
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
