@@ -1,10 +1,13 @@
 package com.example.libraryreader.components
 
+import com.example.libraryreader.R
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -12,6 +15,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -27,6 +32,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -44,7 +50,7 @@ fun ReaderLogo(modifier: Modifier = Modifier, color: Color = Color.Blue) {
         text = "Alexandria lib",
         style = MaterialTheme.typography.displayMedium,
         fontWeight = FontWeight.Bold,
-        color = Color.White
+        color = color
     )
 }
 
@@ -53,10 +59,10 @@ fun ReaderLogo(modifier: Modifier = Modifier, color: Color = Color.Blue) {
 @Composable
 fun UserForm(
     loading: Boolean = false,
-    isCreatedAccount: Boolean = false,
+    DoesUserHaveAccount: Boolean = false,
     onDone: (String, String) -> Unit = { email, pwd -> }
 ) {
-    val cat = rememberSaveable { mutableStateOf("") }
+
     val email = rememberSaveable { mutableStateOf("") }
     val password = rememberSaveable { mutableStateOf("") }
     val passwordVisibility = rememberSaveable { mutableStateOf(false) }
@@ -68,11 +74,22 @@ fun UserForm(
     val modifier = Modifier
         .height(250.dp)
         .verticalScroll(rememberScrollState())
+
     Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        EmailInput(emailState = email, enabled = !loading,
+        if(DoesUserHaveAccount) {
+            Text(
+                text = stringResource( R.string.create_account),
+                modifier = Modifier.padding(4.dp)
+            )
+        }else { Text(text="")
+        }
+
+        EmailInput(
+            emailState = email,
+            enabled = !loading,
             onAction = KeyboardActions {
-            passwordFocusRequest.requestFocus() //Moves focus to the password field
-        })
+                passwordFocusRequest.requestFocus() //Moves cursor to the password field when imeButton pressed
+            })
 
         PasswordInput(
             modifier = Modifier
@@ -85,6 +102,15 @@ fun UserForm(
                 if (!valid) return@KeyboardActions
                 onDone(email.value.trim(), password.value.trim())
             })
+
+        SubmitButton(
+            textId = if (DoesUserHaveAccount) "Create Account" else "Login",
+            loading = loading,
+            validInputs = valid
+        ) {
+            onDone(email.value.trim(), password.value.trim())
+            keyboardController?.hide()
+        }
     }
 }
 
@@ -182,4 +208,37 @@ fun InputField(
             imeAction = imeAction
         )
     )
+}
+
+@Composable
+fun SubmitButton(
+    textId: String,
+    loading: Boolean,
+    validInputs: Boolean,
+    onClick: () -> Unit
+) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .padding(10.dp) // Slightly more padding for a better touch target
+            .fillMaxWidth()
+            .height(50.dp), // Fixed height prevents the button from "jumping" when loading
+        enabled = !loading && validInputs,
+        shape = RoundedCornerShape(15.dp)
+    ) {
+        if (loading) {
+            // Circular looks much better inside a button than Linear
+            CircularProgressIndicator(
+                modifier = Modifier.size(25.dp),
+                color = MaterialTheme.colorScheme.onPrimary, // Matches button text color
+                strokeWidth = 2.dp
+            )
+        } else {
+            Text(
+                text = textId,
+                modifier = Modifier.padding(5.dp),
+                style = MaterialTheme.typography.labelLarge
+            )
+        }
+    }
 }

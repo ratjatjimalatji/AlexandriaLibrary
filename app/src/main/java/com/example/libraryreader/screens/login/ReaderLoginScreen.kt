@@ -1,47 +1,77 @@
 package com.example.libraryreader.screens.login
 
-import android.util.Log
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.libraryreader.components.EmailInput
 import com.example.libraryreader.components.ReaderLogo
 import com.example.libraryreader.components.UserForm
 
 @Composable
 fun Login(navController: NavController) {
+
+    val showLoginForm = rememberSaveable { mutableStateOf(true) }
+    val pageText = if (showLoginForm.value) "Login page" else "Register page"
+
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .background(Color.LightGray),
+                .fillMaxSize(),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            ReaderLogo(color = Color.Blue)
+            Text(
+                pageText, modifier = Modifier
+                    .padding(start = 5.dp),
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.secondary)
 
-            ReaderLogo(color =Color.Blue)
-UserForm(loading = false, isCreatedAccount = false){email, pwd ->
-Log.d("FORM", "Login: $email $pwd")
+            if (showLoginForm.value) {
+                UserForm(loading = false, DoesUserHaveAccount = false) { email, pwd ->
+                    //Todo Firebase Login
 }
+            } else {
+
+                UserForm(loading = false, DoesUserHaveAccount = true) { email, password -> }
+                //TOdo: create FireBase account     }
+            }
+            Spacer(modifier = Modifier.height(50.dp))
+            Row(
+                modifier = Modifier.padding(15.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                val text = if (showLoginForm.value) "Don't have an account? Create one" else "Have an account? Login"
+
+                //Text(text = "New User?")
+                Text(
+                    text, modifier = Modifier
+                        .clickable {
+                            showLoginForm.value = !showLoginForm.value
+                        }
+                        .padding(start = 5.dp),
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.secondary)
+            }
         }
     }
 }

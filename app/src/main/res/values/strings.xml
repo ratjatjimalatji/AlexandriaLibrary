@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">LibraryReader</string>
+    <string name="create_account">Enter a valid email and password. Password must have at least 8 characters</string>
 </resources>
