@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.libraryreader.components.ReaderLogo
-import com.example.libraryreader.components.UserForm
+import com.example.libraryreader.components.LoginSignUpUserForm
 import com.example.libraryreader.navigation.ReaderScreens
 
 @Composable
@@ -51,15 +51,15 @@ fun Login(navController: NavController,
                 color = MaterialTheme.colorScheme.secondary)
 
             if (showLoginForm.value) {
-                UserForm(loading = false, DoesUserHaveAccount = false) { email, pwd ->
-                    //Todo Firebase Login
+                LoginSignUpUserForm(loading = false, DoesUserHaveAccount = false) { email, pwd ->
+                    //Navigate to HomeScreen after a successful login
                     viewModel.signInWithEmailAndPassword(email,pwd){
                         navController.navigate(ReaderScreens.HomeScreen.name)
                     }
 }
             } else {
 
-                UserForm(loading = false, DoesUserHaveAccount = true) { email, password -> }
+                LoginSignUpUserForm(loading = false, DoesUserHaveAccount = true) { email, password -> }
                 //TOdo: create FireBase account     }
             }
             Spacer(modifier = Modifier.height(50.dp))
