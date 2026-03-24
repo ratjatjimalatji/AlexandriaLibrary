@@ -17,15 +17,19 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.libraryreader.components.ReaderLogo
 import com.example.libraryreader.components.UserForm
+import com.example.libraryreader.navigation.ReaderScreens
 
 @Composable
-fun Login(navController: NavController) {
+fun Login(navController: NavController,
+          viewModel: LoginScreenViewModel = viewModel() // from loginScreenViewModel
+
+) {
 
     val showLoginForm = rememberSaveable { mutableStateOf(true) }
     val pageText = if (showLoginForm.value) "Login page" else "Register page"
@@ -33,7 +37,8 @@ fun Login(navController: NavController) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(top=40.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -48,6 +53,9 @@ fun Login(navController: NavController) {
             if (showLoginForm.value) {
                 UserForm(loading = false, DoesUserHaveAccount = false) { email, pwd ->
                     //Todo Firebase Login
+                    viewModel.signInWithEmailAndPassword(email,pwd){
+                        navController.navigate(ReaderScreens.HomeScreen.name)
+                    }
 }
             } else {
 
