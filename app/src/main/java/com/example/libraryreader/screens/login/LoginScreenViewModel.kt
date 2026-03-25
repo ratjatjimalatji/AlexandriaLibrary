@@ -1,6 +1,5 @@
 package com.example.libraryreader.screens.login
 
-import android.R.id.message
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
 class LoginScreenViewModel : ViewModel() {
@@ -23,18 +22,13 @@ class LoginScreenViewModel : ViewModel() {
     val loading: LiveData<Boolean> = _loading
 
 
-    fun signInWithEmailAndPassword(email: String, password: String, home: () -> Unit) =
+    fun signInWithEmailAndPassword(email: String, password: String, navigateToHomeScreen: () -> Unit) =
         viewModelScope.launch {
             try {
                 auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener() { task ->
                         if (task.isSuccessful) {
-                            Log.d(
-                                "Firebase",
-                                "signInWithEmailAndPassword: Login SUCCESS ${task.result.toString()}"
-                            )
-                            //TODO("Take user to home page")
-                            home()
+                            navigateToHomeScreen()
                         } else {
                             Log.d(
                                 "Firebase",
@@ -47,6 +41,24 @@ class LoginScreenViewModel : ViewModel() {
             }
         }
 
+    //User registers and is added to the users collection
+        fun createUser(displayName: String?) {
+            val userId = auth.currentUser?.uid ?: return //auth has the refence of the logged in user
+
+        val user = hashMapOf(
+            "user_id" to userId,
+            "display_name" to displayName.toString()
+        )
+
+        // Use .document(userId).set() instead of .add()
+        FirebaseFirestore.getInstance().collection("users")
+            .document(userId)
+            .set(user)
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Error creating user document", e)
+            }
+    }
+
 
     fun createUserWithEmailAndPassword(
         email: String,
@@ -58,12 +70,17 @@ class LoginScreenViewModel : ViewModel() {
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
+
+                        //display name is usually name@gmail.com
+                        //@ is the delimiter
+                        //name = [0], @gmail.com = [1]
+                        val displayName = task.result?.user?.email?.split('@')?.get(0)
+                        createUser(displayName)
+
                         goToHomeScreen()
                     } else {
-                        Log.d(
-                            "Firebase",
-                            "createUserWithEmailAndPassword: ${task.result.toString()}"
-                        )
+                        // FIX: Log the exception directly to avoid IllegalStateException
+                        Log.e("Firebase", "Auth Failed", task.exception)
                     }
                     _loading.value = false
                 }
