@@ -5,11 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.libraryreader.model.FirebaseUser
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
+import kotlin.String
 
 class LoginScreenViewModel : ViewModel() {
     //val loadingState = MutableStateFlow(LoadingState.IDLE)
@@ -42,13 +44,17 @@ class LoginScreenViewModel : ViewModel() {
         }
 
     //User registers and is added to the users collection
-        fun createUser(displayName: String?) {
+        fun createFirebaseUser(displayName: String?) {
             val userId = auth.currentUser?.uid ?: return //auth has the refence of the logged in user
 
-        val user = hashMapOf(
-            "user_id" to userId,
-            "display_name" to displayName.toString()
-        )
+        val user = FirebaseUser(
+            id = null,
+        userId = userId.toString(),
+        displayName = displayName.toString(),
+        avatarUrl = "",
+        quote = "2026 we're on offense!",
+        profession = "Android Dev").toMap()
+
 
         // Use .document(userId).set() instead of .add()
         FirebaseFirestore.getInstance().collection("users")
@@ -75,7 +81,7 @@ class LoginScreenViewModel : ViewModel() {
                         //@ is the delimiter
                         //name = [0], @gmail.com = [1]
                         val displayName = task.result?.user?.email?.split('@')?.get(0)
-                        createUser(displayName)
+                        createFirebaseUser(displayName)
 
                         goToHomeScreen()
                     } else {
