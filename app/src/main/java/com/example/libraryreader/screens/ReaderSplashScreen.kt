@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.libraryreader.components.ReaderLogo
 import com.example.libraryreader.navigation.ReaderScreens
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
 
 
@@ -44,7 +45,13 @@ val scale = remember {
                 })
         )
         delay(1000L) // 1 second delay
-        navController.navigate(ReaderScreens.LoginScreen.name) //navigate to login screen
+
+        // bypassing logging in if users is already logged in
+        if (FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty()){
+        navController.navigate(ReaderScreens.LoginScreen.name)
+    }else{
+        navController.navigate(ReaderScreens.HomeScreen.name)
+         }
     }
     Surface(modifier = Modifier
         .padding(15.dp)
