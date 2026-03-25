@@ -51,7 +51,7 @@ fun Login(navController: NavController,
                 color = MaterialTheme.colorScheme.secondary)
 
             if (showLoginForm.value) {
-                LoginSignUpUserForm(loading = false, DoesUserHaveAccount = false) { email, pwd ->
+                LoginSignUpUserForm(loading = false, registerScreen = false) { email, pwd ->
                     //Navigate to HomeScreen after a successful login
                     viewModel.signInWithEmailAndPassword(email,pwd){
                         navController.navigate(ReaderScreens.HomeScreen.name)
@@ -59,8 +59,12 @@ fun Login(navController: NavController,
 }
             } else {
 
-                LoginSignUpUserForm(loading = false, DoesUserHaveAccount = true) { email, password -> }
-                //TOdo: create FireBase account     }
+
+                LoginSignUpUserForm(loading = false, registerScreen = true) { email, password ->
+                viewModel.createUserWithEmailAndPassword(email,password){
+                    navController.navigate(ReaderScreens.HomeScreen.name)
+                }
+            }
             }
             Spacer(modifier = Modifier.height(50.dp))
             Row(
