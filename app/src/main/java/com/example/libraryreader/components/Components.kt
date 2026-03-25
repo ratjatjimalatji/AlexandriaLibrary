@@ -58,8 +58,7 @@ fun ReaderLogo(modifier: Modifier = Modifier, color: Color = Color.Blue) {
 @Preview
 @Composable
 fun LoginSignUpUserForm(
-    loading: Boolean = false,
-    doesUserHaveAccount: Boolean = false,
+    loading: Boolean = false, registerScreen: Boolean = false,
     onDone: (String, String) -> Unit = { email, pwd -> }
 ) {
 
@@ -76,7 +75,7 @@ fun LoginSignUpUserForm(
         .verticalScroll(rememberScrollState())
 
     Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        if(doesUserHaveAccount) {
+        if(registerScreen) {
             Text(
                 text = stringResource( R.string.create_account),
                 modifier = Modifier.padding(4.dp)
@@ -104,7 +103,7 @@ fun LoginSignUpUserForm(
             })
 
         SubmitButton(
-            textId = if (doesUserHaveAccount) "Create Account" else "Login",
+            textId = if (registerScreen) "Create Account" else "Login",
             loading = loading,
             validInputs = valid
         ) {
