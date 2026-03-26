@@ -47,12 +47,12 @@ val scale = remember {
         delay(1000L) // 1 second delay
 
         // bypassing logging in if users is already logged in
-//        if (FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty()){
-//        navController.navigate(ReaderScreens.LoginScreen.name)
-//    }else{
-//        navController.navigate(ReaderScreens.HomeScreen.name)
-//         }
+        if (FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty()){
         navController.navigate(ReaderScreens.LoginScreen.name)
+    }else{
+        navController.navigate(ReaderScreens.HomeScreen.name)
+         }
+ //       navController.navigate(ReaderScreens.LoginScreen.name)
     }
     Surface(modifier = Modifier
         .padding(15.dp)
