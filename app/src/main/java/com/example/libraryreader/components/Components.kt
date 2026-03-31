@@ -2,10 +2,13 @@ package com.example.libraryreader.components
 
 import com.example.libraryreader.R
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -13,14 +16,21 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -28,20 +38,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.libraryreader.navigation.ReaderScreens
+import com.google.firebase.auth.FirebaseAuth
 
 
 @Composable
@@ -239,5 +256,92 @@ fun SubmitButton(
                 style = MaterialTheme.typography.labelLarge
             )
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ReaderAppBar(
+    title: String,
+    showProfile: Boolean = true,
+    navController: NavController
+) {
+    TopAppBar(
+        title = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (showProfile) {
+                    Icon(
+                        imageVector = Icons.Filled.MenuBook,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(50.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .scale(.6f)
+                    )
+                }
+                Text(
+                    text = title,
+                    color = Color.Blue.copy(alpha = 0.7f),
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Blue.copy(alpha = 0.7f)
+                    ),
+                    modifier = Modifier.padding(start = 5.dp)
+                )
+                Spacer(modifier = Modifier.width(150.dp))
+
+            }
+        },
+        actions = {
+            Column {
+                IconButton(onClick = {
+                    FirebaseAuth.getInstance().signOut().run {
+                        navController.navigate(ReaderScreens.LoginScreen.name)
+                    }
+                }) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.Logout,
+                        contentDescription = "Logout",
+                        tint = Color.Blue.copy(alpha = 0.7f)
+                    )
+                }
+                Text("Sign out")
+            }
+
+        },
+    )
+}
+
+@Composable
+fun TitleSection(modifier: Modifier = Modifier, label: String) {
+    Surface(
+        modifier = modifier.padding(5.dp)
+    ) {
+        Column {
+            Text(
+                text = label,
+                fontSize = 20.sp,
+                style = TextStyle(
+                    fontStyle = FontStyle.Normal
+                ),
+                textAlign = TextAlign.Left
+            )
+        }
+    }
+}
+
+@Composable
+fun FABContent(onTap: () -> Unit) {
+    FloatingActionButton(
+        onClick = { onTap() },
+        shape = RoundedCornerShape(50.dp),
+        containerColor = Color.Blue,
+        contentColor = Color.White
+    ) {
+        Icon(
+            imageVector = Icons.Default.Add,
+            contentDescription = "Add a book to reading list",
+            tint = Color.White
+        )
     }
 }

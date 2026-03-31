@@ -8,6 +8,7 @@ import com.example.libraryreader.screens.ReaderSplashScreen
 import com.example.libraryreader.screens.home.Home
 import com.example.libraryreader.screens.login.Login
 import com.example.libraryreader.screens.search.Search
+import com.example.libraryreader.screens.stats.Stats
 import com.example.libraryreader.screens.update.Update
 
 @Composable
@@ -38,5 +39,8 @@ fun ReaderNavigation() {
             Update(navController = navController)
         }
 
+        composable(ReaderScreens.StatsScreen.name) {
+            Stats(navController = navController)
+        }
 
 }}
