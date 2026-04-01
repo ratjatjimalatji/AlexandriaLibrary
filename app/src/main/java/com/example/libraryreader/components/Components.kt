@@ -208,6 +208,7 @@ fun EmailInput(
         valueState = emailState,
         labelId = labelId,
         enabled = enabled,
+        placeHolderId = "example@domain.com",
         keyboardType = KeyboardType.Email,
         imeAction = imeAction,
         onAction = onAction
@@ -220,6 +221,7 @@ fun InputField(
     valueState: MutableState<String>,
     labelId: String,
     enabled: Boolean,
+    placeHolderId: String = "",
     isSingleLine: Boolean = true,
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Next,
@@ -229,7 +231,7 @@ fun InputField(
         value = valueState.value,
         onValueChange = { valueState.value = it },
         label = { Text(text = labelId) },
-        placeholder = { Text(text = "example@domain.com") },
+        placeholder = { Text(text = placeHolderId) },
         singleLine = isSingleLine,
         textStyle = TextStyle(
             fontSize = 18.sp,
