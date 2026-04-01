@@ -75,7 +75,7 @@ import com.google.firebase.auth.FirebaseAuth
 @Composable
 fun Home(navController: NavController) {
     Scaffold(
-        topBar = {ReaderAppBar("Alexandria Library", navController = navController)},
+        topBar = {ReaderAppBar(null, "Alexandria Library", navController = navController)},
         floatingActionButton = {
             FABContent() {
                 navController.navigate(ReaderScreens.SearchScreen.name)

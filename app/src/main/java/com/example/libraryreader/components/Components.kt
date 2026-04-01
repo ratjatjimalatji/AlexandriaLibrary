@@ -1,6 +1,7 @@
 package com.example.libraryreader.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -8,6 +9,7 @@ import com.example.libraryreader.R
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -53,6 +55,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -278,23 +281,31 @@ fun SubmitButton(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReaderAppBar(
+    icon: ImageVector? = null,
     title: String,
-    showProfile: Boolean = true,
-    navController: NavController
+    showIcon: Boolean = true,
+    navController: NavController,
+    onBackArrowClicked: () -> Unit = {}
 ) {
     TopAppBar(
         title = {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                if (showProfile) {
+                if (showIcon) {
                     Icon(
                         imageVector = Icons.Filled.MenuBook,
                         contentDescription = null,
                         modifier = Modifier
                             .size(50.dp)
                             .clip(RoundedCornerShape(12.dp))
-                            .scale(.6f)
+                            .scale(.5f)
                     )
                 }
+                if (icon != null){
+                    Icon(imageVector = icon, contentDescription = "back arrow",tint = Color.Blue, modifier = Modifier.clickable{ onBackArrowClicked.invoke() })
+                }
+
+                Spacer(modifier = Modifier.width(40.dp))
+
                 Text(
                     text = title,
                     color = Color.Blue.copy(alpha = 0.7f),
@@ -302,14 +313,14 @@ fun ReaderAppBar(
                         fontWeight = FontWeight.Bold,
                         color = Color.Blue.copy(alpha = 0.7f)
                     ),
-                    modifier = Modifier.padding(start = 5.dp)
                 )
-                Spacer(modifier = Modifier.width(150.dp))
 
             }
         },
+
         actions = {
-            Column {
+            if (showIcon)
+            {Column {
                 IconButton(onClick = {
                     FirebaseAuth.getInstance().signOut().run {
                         navController.navigate(ReaderScreens.LoginScreen.name)
@@ -318,12 +329,13 @@ fun ReaderAppBar(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.Logout,
                         contentDescription = "Logout",
-                        tint = Color.Blue.copy(alpha = 0.7f)
+                        tint = Color.Blue.copy(alpha = 0.9f),
+                        modifier = Modifier.fillMaxSize(0.8f)
+
                     )
                 }
-                Text("Sign out")
             }
-
+        }
         },
     )
 }
@@ -399,7 +411,7 @@ fun RoundedButton(
 fun ListCard(
     book: FireBaseBook = FireBaseBook(
         "1",
-        "50 Laws",
+        "Money Laws",
         "Curtis Jackson",
         "Addition of 48 Laws",
         "a",
