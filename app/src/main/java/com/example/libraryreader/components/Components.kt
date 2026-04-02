@@ -2,9 +2,11 @@ package com.example.libraryreader.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import com.example.libraryreader.R
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,6 +29,7 @@ import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MenuBook
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -37,12 +40,15 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -56,6 +62,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -290,7 +297,7 @@ fun ReaderAppBar(
     onBackArrowClicked: () -> Unit = {}
 ) {
     TopAppBar(
-        title = {
+                title = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (showIcon) {
                     Icon(
@@ -302,8 +309,12 @@ fun ReaderAppBar(
                             .scale(.5f)
                     )
                 }
-                if (icon != null){
-                    Icon(imageVector = icon, contentDescription = "back arrow",tint = Color.Blue, modifier = Modifier.clickable{ onBackArrowClicked.invoke() })
+                if (icon != null) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = "back arrow",
+                        tint = Color.Blue,
+                        modifier = Modifier.clickable { onBackArrowClicked.invoke() })
                 }
 
                 Spacer(modifier = Modifier.width(40.dp))
@@ -321,33 +332,42 @@ fun ReaderAppBar(
         },
 
         actions = {
-            if (showIcon)
-            {Column {
-                IconButton(onClick = {
-                    FirebaseAuth.getInstance().signOut().run {
-                        navController.navigate(ReaderScreens.LoginScreen.name)
-                    }
-                }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.Logout,
-                        contentDescription = "Logout",
-                        tint = Color.Blue.copy(alpha = 0.9f),
-                        modifier = Modifier.fillMaxSize(0.8f)
+            if (showIcon) {
+                Column {
+                    IconButton(onClick = {
+                        FirebaseAuth.getInstance().signOut().run {
+                            navController.navigate(ReaderScreens.LoginScreen.name)
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.Logout,
+                            contentDescription = "Logout",
+                            tint = Color.Blue.copy(alpha = 0.9f),
+                            modifier = Modifier.fillMaxSize(0.8f)
 
-                    )
+                        )
+                    }
                 }
             }
-        }
         },
     )
 }
 
+
 @Composable
 fun TitleSection(modifier: Modifier = Modifier, label: String) {
     Surface(
-        modifier = modifier.padding(5.dp)
+        modifier = modifier.padding(horizontal = 5.dp)
+
     ) {
-        Column {
+        Column(modifier = Modifier.background(Color.White)){
+            HorizontalDivider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp),
+                color = Color.LightGray
+            )
+
             Text(
                 text = label,
                 fontSize = 20.sp,
@@ -377,7 +397,6 @@ fun FABContent(onTap: () -> Unit) {
 }
 
 
-@Preview
 @Composable
 fun RoundedButton(
     label: String = "Reading",
@@ -391,7 +410,7 @@ fun RoundedButton(
                 topStartPercent = radius
             )
         ),
-        color = Color.Black
+        color = Color.LightGray.copy(alpha = 0.9f)
     )
     {
         Column(
@@ -428,9 +447,9 @@ fun ListCard(
     val displayMetrics = resources.displayMetrics
 
     Card(
-        shape = RoundedCornerShape(29.dp),
+        shape = RoundedCornerShape(10.dp),
         colors = CardDefaults.cardColors(Color.White),
-        elevation = CardDefaults.cardElevation(6.dp),
+        elevation = CardDefaults.cardElevation(2.dp),
         modifier = Modifier
             .padding(16.dp)
             .width(200.dp)
@@ -493,7 +512,7 @@ fun ListCard(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.Bottom
             ) {
-                RoundedButton("Reading", 70)
+                RoundedButton("Reading", 10)
             }
         }
     }
@@ -506,28 +525,69 @@ fun BookRating(score: Double = 4.5) {
             .padding(4.dp)
             .height(70.dp),
         shape = RoundedCornerShape(10.dp),
-        shadowElevation = 4.dp,
         color = Color.White
     ) {
-        Column(modifier = Modifier.padding(4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,) {
-            Icon(
-                imageVector = Icons.Default.StarBorder,
-                modifier = Modifier.padding(3.dp),
-                contentDescription = "Favourite"
-            )
-            Text(text = score.toString(), style = MaterialTheme.typography.bodyLarge)
+        Box() {
+            Column(
+                modifier = Modifier.padding(4.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Star,
+                    tint = Color.Blue.copy(alpha = 0.9f),
+                    modifier = Modifier.padding(3.dp),
+                    contentDescription = "Favourite"
+                )
+                Text(text = score.toString(), style = MaterialTheme.typography.bodyLarge)
+            }
         }
     }
 }
+
 @Composable
 fun ContentBelowTopAppBar(navController: NavController) {
 
     var listOfBooks = listOf(
-        FireBaseBook("1", "50 Laws", "Curtis Jackson", "Addition of 48 Laws", "a", categories = listOf("Self Help"), publishedDate = "28/04/1948", pageCount = 380),
-        FireBaseBook("2", "Dorian Grey", "Charles Dickens", "Dichotomy of man", "a", categories = listOf("Love Story"), publishedDate = "24/08/1868", pageCount = 200),
-        FireBaseBook("3", "AI Laws", "Curtis Jackson", "Addition of 48 Laws", "a", categories = listOf("Self Help"), publishedDate = "28/04/1948", pageCount = 380),
-        FireBaseBook("4", "Extreme ownership", "Charles Dickens", "Dichotomy of man", "a", categories = listOf("Love Story"), publishedDate = "24/08/1868", pageCount = 200),
+        FireBaseBook(
+            "1",
+            "50 Laws",
+            "Curtis Jackson",
+            "Addition of 48 Laws",
+            "a",
+            categories = listOf("Self Help"),
+            publishedDate = "28/04/1948",
+            pageCount = 380
+        ),
+        FireBaseBook(
+            "2",
+            "Dorian Grey",
+            "Charles Dickens",
+            "Dichotomy of man",
+            "a",
+            categories = listOf("Love Story"),
+            publishedDate = "24/08/1868",
+            pageCount = 200
+        ),
+        FireBaseBook(
+            "3",
+            "AI Laws",
+            "Curtis Jackson",
+            "Addition of 48 Laws",
+            "a",
+            categories = listOf("Self Help"),
+            publishedDate = "28/04/1948",
+            pageCount = 380
+        ),
+        FireBaseBook(
+            "4",
+            "Extreme ownership",
+            "Charles Dickens",
+            "Dichotomy of man",
+            "a",
+            categories = listOf("Love Story"),
+            publishedDate = "24/08/1868",
+            pageCount = 200
+        ),
 
         )
     val email = FirebaseAuth.getInstance().currentUser?.email
@@ -582,48 +642,50 @@ fun ContentBelowTopAppBar(navController: NavController) {
 fun BookListArea(listOfBooks: List<FireBaseBook>, navController: NavController) {
 
     HorizontalScrollableComponent(listOfBooks) {
-    //Todo: onClick Action navigate to details screen}
-    @Composable
-    fun BookRating(score: Double = 4.5) {
-        Surface(
-            modifier = Modifier
-                .padding(4.dp)
-                .height(70.dp),
-            shape = RoundedCornerShape(10.dp),
-            shadowElevation = 4.dp,
-            color = Color.White
-        ) {
-            Column(
-                modifier = Modifier.padding(4.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
+        //Todo: onClick Action navigate to details screen}
+        @Composable
+        fun BookRating(score: Double = 4.5) {
+            Surface(
+                modifier = Modifier
+                    .padding(4.dp)
+                    .height(70.dp),
+                shape = RoundedCornerShape(10.dp),
+                shadowElevation = 4.dp,
+                color = Color.White
             ) {
-                Icon(
-                    imageVector = Icons.Default.StarBorder,
-                    modifier = Modifier.padding(3.dp),
-                    contentDescription = "Favourite"
-                )
-                Text(text = score.toString(), style = MaterialTheme.typography.bodyLarge)
-            }
-        }
-    }}}
-
-    @Composable
-    fun HorizontalScrollableComponent(
-        listOfBooks: List<FireBaseBook>,
-        onCardPressed: (String) -> Unit
-    ) {
-        val scrollableSate = rememberScrollState()
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(scrollableSate)
-        ) {
-
-            for (book in listOfBooks) {
-                ListCard(book) {
-                    onCardPressed(it)
+                Column(
+                    modifier = Modifier.padding(4.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.StarBorder,
+                        modifier = Modifier.padding(3.dp),
+                        contentDescription = "Favourite"
+                    )
+                    Text(text = score.toString(), style = MaterialTheme.typography.bodyLarge)
                 }
             }
         }
     }
+}
+
+@Composable
+fun HorizontalScrollableComponent(
+    listOfBooks: List<FireBaseBook>,
+    onCardPressed: (String) -> Unit
+) {
+    val scrollableSate = rememberScrollState()
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .horizontalScroll(scrollableSate)
+    ) {
+
+        for (book in listOfBooks) {
+            ListCard(book) {
+                onCardPressed(it)
+            }
+        }
+    }
+}
 

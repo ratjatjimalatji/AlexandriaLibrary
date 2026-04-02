@@ -4,13 +4,18 @@ import android.view.animation.OvershootInterpolator
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,65 +26,82 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.libraryreader.R
 import com.example.libraryreader.components.ReaderLogo
 import com.example.libraryreader.navigation.ReaderScreens
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
 
-
+@Preview(showBackground = true)
 @Composable
-fun ReaderSplashScreen(navController: NavController) {
-val scale = remember {
-    Animatable(0f)
-}
+fun ReaderSplashScreen(navController: NavController = NavController(LocalContext.current)) {
+    val scale = remember {
+        Animatable(0f)
+    }
 
-    LaunchedEffect(key1 = true){
-        scale.animateTo(targetValue = 0.9f,
-            animationSpec = tween(durationMillis = 800,
+    LaunchedEffect(key1 = true) {
+        scale.animateTo(
+            targetValue = 0.8f,
+            animationSpec = tween(
+                durationMillis = 1200,
                 easing = {
                     OvershootInterpolator(2f)
                         .getInterpolation(it)
                 })
         )
-        delay(1000L) // 1 second delay
+        delay(1500L) // 1 second delay
 
         // bypassing logging in if users is already logged in
-        if (FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty()){
-        navController.navigate(ReaderScreens.LoginScreen.name)
-    }else{
-        navController.navigate(ReaderScreens.HomeScreen.name)
-         }
- //       navController.navigate(ReaderScreens.LoginScreen.name)
-    }
-    Surface(modifier = Modifier
-        .padding(15.dp)
-        .size(330.dp)
-        .scale(scale.value), // passing scale value to
-        shape = CircleShape,
-        color = Color.Blue,
-        border = BorderStroke(width = 4.dp,
-            color = Color.LightGray)
-    ) {
-        Column(modifier = Modifier.padding(1.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally) {
-
-            ReaderLogo(color = Color.White)
-
-            Text(text=" The largest library of books",
-                style = MaterialTheme.typography.headlineSmall,
-                color = Color.LightGray,
-                textAlign = TextAlign.Center)
-            Spacer(modifier = Modifier.height(30.dp))
-            Text(text="created by Ratjatji Malatji",
-                style = MaterialTheme.typography.titleMedium,
-                color = Color.White
-                )
+        if (FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty()) {
+            navController.navigate(ReaderScreens.LoginScreen.name)
+        } else {
+            navController.navigate(ReaderScreens.HomeScreen.name)
         }
+        //       navController.navigate(ReaderScreens.LoginScreen.name)
     }
+    Column(modifier = Modifier.fillMaxSize()
+        .background(Color.White),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally) {
+        Surface(
+            modifier = Modifier
+                .padding(15.dp)
+                .background(Color.White)
+                .scale(scale.value), // passing scale value to
+        ) {
+            Column(
+                modifier = Modifier.padding(1.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    painterResource(R.drawable.ic_book),
+                    tint = Color.Blue,
+                    contentDescription = "logo",
+                    modifier = Modifier.size(200.dp),
+                )
+                ReaderLogo(color = Color.Blue)
 
+                Text(
+                    text = " The largest library of books",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = Color.LightGray,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(30.dp))
+                Text(
+                    text = "created by Ratjatji Malatji",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.LightGray
+                )
+            }
+        }
+
+    }
 }
-

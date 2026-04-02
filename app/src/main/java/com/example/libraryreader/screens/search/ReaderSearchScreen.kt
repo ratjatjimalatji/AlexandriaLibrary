@@ -45,7 +45,7 @@ fun Search(navController: NavController = NavController(LocalContext.current)){
 
                 .padding(innerPadding)
         ) {
-Column(modifier = Modifier.fillMaxWidth()){
+Column(modifier = Modifier.fillMaxWidth().background(Color.White)){
     SearchForm(modifier = Modifier.fillMaxWidth().padding(16.dp), hint = "Search bok by title", onSearch = { })
 }
         }

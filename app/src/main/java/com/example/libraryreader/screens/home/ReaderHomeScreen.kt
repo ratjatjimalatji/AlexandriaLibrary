@@ -86,12 +86,14 @@ fun Home(navController: NavController) {
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-
+            Column(modifier = Modifier
+                .background(Color.White)
+                .fillMaxSize()) {
             ContentBelowTopAppBar(navController)
         }
     }
 
-}
+}}
 
 @Composable
 fun ReadingRightNowArea(books: List<FireBaseBook>, navController: NavController) {
