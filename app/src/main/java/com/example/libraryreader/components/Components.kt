@@ -2,7 +2,6 @@ package com.example.libraryreader.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -42,13 +41,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -62,7 +59,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -333,7 +329,7 @@ fun ReaderAppBar(
 
         actions = {
             if (showIcon) {
-                Column {
+                Column (modifier = Modifier.background(Color.Red)){
                     IconButton(onClick = {
                         FirebaseAuth.getInstance().signOut().run {
                             navController.navigate(ReaderScreens.LoginScreen.name)
@@ -379,12 +375,11 @@ fun TitleSection(modifier: Modifier = Modifier, label: String) {
         }
     }
 }
-
 @Composable
 fun FABContent(onTap: () -> Unit) {
     FloatingActionButton(
         onClick = { onTap() },
-        shape = RoundedCornerShape(50.dp),
+        shape = RoundedCornerShape(20.dp),
         containerColor = Color.Blue,
         contentColor = Color.White
     ) {

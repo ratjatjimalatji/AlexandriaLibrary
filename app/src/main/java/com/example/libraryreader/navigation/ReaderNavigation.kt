@@ -3,10 +3,13 @@ package com.example.libraryreader.navigation
 import androidx.compose.runtime.Composable
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.libraryreader.screens.ReaderSplashScreen
+import com.example.libraryreader.screens.details.Details
 import com.example.libraryreader.screens.home.Home
 import com.example.libraryreader.screens.login.Login
 import com.example.libraryreader.screens.search.BookSearchViewModel
@@ -17,9 +20,10 @@ import com.example.libraryreader.screens.update.Update
 @Composable
 fun ReaderNavigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController,
+    NavHost(
+        navController = navController,
         startDestination = ReaderScreens.SplashScreen.name // The application opens the splash screen upon app start
-    ){
+    ) {
 
 
         composable(ReaderScreens.SplashScreen.name) {
@@ -46,5 +50,18 @@ fun ReaderNavigation() {
         composable(ReaderScreens.StatsScreen.name) {
             Stats(navController = navController)
         }
+        val detailName = ReaderScreens.DetailsScreen.name
+        composable(
+            "$detailName/{bookId}", arguments = listOf(
+                navArgument("bookId")
+                {
+                    type = NavType.StringType
+                })
+        ) { backStackEntry ->
+            backStackEntry.arguments?.getString("bookId").let {
+                Details(navController = navController, bookId = it.toString())
+            }
 
-}}
+        }
+    }
+}
