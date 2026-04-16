@@ -1,18 +1,18 @@
+import org.gradle.kotlin.dsl.support.kotlinCompilerOptions
+
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.compose)
+    id("com.android.application")
+    id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp")
     id("com.google.gms.google-services")
-    //id("kotlin-kapt")
-    //id("dagger.hilt.android.plugin")
-    //alias(libs.plugins.android.application)
-    //alias(libs.plugins.google.devtools.ksp)
+    alias(libs.plugins.compose.compiler)
+
 }
+
 
 android {
     namespace = "com.example.libraryreader"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.libraryreader"
@@ -37,11 +37,16 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     buildFeatures {
         compose = true
     }
 }
-
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+    }
+}
 dependencies {
     //Icons
     implementation("androidx.compose.material:material-icons-extended")
@@ -65,55 +70,26 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-//    // Firebase
+    // Firebase
     implementation(platform("com.google.firebase:firebase-bom:34.10.0"))
     implementation(libs.firebase.auth)
-    implementation("com.google.firebase:firebase-firestore:26.1.1")
-    implementation("com.google.firebase:firebase-firestore-ktx:25.1.4")
-    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-analytics")
 
-//
-//    // Dagger - Hilt
-    //kapt(libs.hilt.android)
-    implementation("com.google.dagger:hilt-android:2.48")
-    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.3.0")
-    //ksp(libs.hilt.compiler)
+    // Dagger - Hilt
     implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
+    implementation("com.google.dagger:hilt-android:2.57.1")
 
-//
-////    // Networking
-//    implementation(libs.retrofit)
-//    implementation(libs.retrofit.gson)
-//    implementation(libs.okhttp)
-////
-//    // Coroutines
-//    implementation("org.jetbrains.kotlin:kotlinx-coroutines-core:1.10.1")
-//    implementation("org.jetbrains.kotlin:kotlinx-coroutines-android:1.10.1")
-//    implementation("org.jetbrains.kotlin:kotlinx-coroutines-play-services:1.10.1")
-//
-//    //Coil
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    ksp("com.google.dagger:hilt-android-compiler:2.57.1")
+    // Coil
     implementation("io.coil-kt:coil-compose:2.7.0")
-//
-//    // Image Loading (Coil)
-//    implementation(libs.coil.compose)
-//    implementation(libs.coil.network)
-//
-//    // UI & Icons
-//    implementation(libs.androidx.material.icons.extended)
-//    implementation(libs.androidx.activity.compose)
-//    implementation(platform(libs.androidx.compose.bom))
-//    implementation(libs.androidx.ui)
-//    implementation(libs.androidx.material)
-////
-////    // Core & Lifecycle
-//    implementation(libs.androidx.core.ktx)
-    implementation("androidx.lifecycle:lifecycle-viewmodel:2.4.0")
-    implementation("androidx.lifecycle:lifecycle-runtime:2.4.0")
-//    implementation(libs.androidx.appcompat)
-//
-//    // Testing
-//    testImplementation(libs.junit)
-//    androidTestImplementation(libs.androidx.junit)
-//    androidTestImplementation(libs.androidx.espresso.core)
+
+    // Lifecycle
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
 }

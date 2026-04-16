@@ -1,12 +1,15 @@
 package com.example.libraryreader.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.libraryreader.screens.ReaderSplashScreen
 import com.example.libraryreader.screens.home.Home
 import com.example.libraryreader.screens.login.Login
+import com.example.libraryreader.screens.search.BookSearchViewModel
 import com.example.libraryreader.screens.search.Search
 import com.example.libraryreader.screens.stats.Stats
 import com.example.libraryreader.screens.update.Update
@@ -32,7 +35,8 @@ fun ReaderNavigation() {
         }
 
         composable(ReaderScreens.SearchScreen.name) {
-            Search(navController = navController)
+            val searchViewModel = hiltViewModel<BookSearchViewModel>()
+            Search(navController = navController, viewModel = searchViewModel)
         }
 
         composable(ReaderScreens.UpdateScreen.name) {
