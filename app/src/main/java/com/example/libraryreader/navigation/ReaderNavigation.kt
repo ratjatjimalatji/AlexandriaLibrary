@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.libraryreader.screens.ReaderSplashScreen
 import com.example.libraryreader.screens.details.Details
+import com.example.libraryreader.screens.details.DetailsViewModel
 import com.example.libraryreader.screens.home.Home
 import com.example.libraryreader.screens.login.Login
 import com.example.libraryreader.screens.search.BookSearchViewModel
@@ -59,7 +60,8 @@ fun ReaderNavigation() {
                 })
         ) { backStackEntry ->
             backStackEntry.arguments?.getString("bookId").let {
-                Details(navController = navController, bookId = it.toString())
+                val detailsViewModel = hiltViewModel<DetailsViewModel>()
+                Details(navController = navController, bookId = it.toString(), viewModel = detailsViewModel)
             }
 
         }

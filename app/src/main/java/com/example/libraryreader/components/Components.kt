@@ -329,7 +329,7 @@ fun ReaderAppBar(
 
         actions = {
             if (showIcon) {
-                Column (modifier = Modifier.background(Color.Red)){
+                Column{
                     IconButton(onClick = {
                         FirebaseAuth.getInstance().signOut().run {
                             navController.navigate(ReaderScreens.LoginScreen.name)
@@ -589,7 +589,6 @@ fun ContentBelowTopAppBar(navController: NavController) {
     val currentUsername = if (!FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty())
         FirebaseAuth.getInstance().currentUser?.email!!.split("@")?.get(0) else "N/A"
     Column(
-        //Modifier.padding(2.dp),
         verticalArrangement = Arrangement.Top,
 
         )
