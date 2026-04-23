@@ -97,7 +97,11 @@ fun BookList(navController: NavController,
 
 val listOfBooks = viewModel.list
 if(viewModel.isLoading){
-    CircularProgressIndicator()
+    Column(){
+        CircularProgressIndicator()
+        Text(text="loading")
+    }
+
 }else{
     LazyColumn(modifier = Modifier.fillMaxWidth(0.9f)) {
         items(listOfBooks) { book ->
