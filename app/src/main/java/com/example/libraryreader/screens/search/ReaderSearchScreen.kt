@@ -128,8 +128,8 @@ fun BookRow(
         shape = RoundedCornerShape(8.dp),
         shadowElevation = 2.dp
     ) {
-        Row(modifier = Modifier.padding(12.dp)) {
-
+        Row() {
+Column(modifier = Modifier.padding(12.dp).background(Color.Yellow), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
             val imageUrl: String = if(book.volumeInfo.imageLinks.smallThumbnail.isEmpty()==true){
             ""
             }
@@ -147,6 +147,7 @@ fun BookRow(
                     .clip(RoundedCornerShape(4.dp)),
                 contentScale = ContentScale.Crop
             )
+}
 
             Spacer(modifier = Modifier.width(16.dp))
 

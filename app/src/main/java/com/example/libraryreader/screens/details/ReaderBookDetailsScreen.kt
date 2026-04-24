@@ -1,6 +1,7 @@
 package com.example.libraryreader.screens.details
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -17,6 +19,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardElevation
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -24,7 +27,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.text.HtmlCompat
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.libraryreader.components.ReaderAppBar
@@ -82,11 +90,30 @@ fun ShowBookDetails(bookInfo: Resource<Item>, navController: NavController) {
             painter = rememberImagePainter(data = bookData?.imageLinks?.smallThumbnail), contentDescription = "book image")}
     Text(text = "Book Details Screen: ${bookData?.title}")
     Text(text = "Authors: ${bookData?.authors}")
-    Text(text = "Categories: [${bookData?.categories}]")
+    Text(text = "Categories: [${bookData?.categories}]", maxLines = 3, style = MaterialTheme.typography.titleSmall, overflow = TextOverflow.Ellipsis)
     Text(text = "Published date: ${bookData?.publishedDate}")
+
+    //Removes html tags from description
+    val cleanDescription = HtmlCompat.fromHtml(bookData!!.description,
+        HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
+    val localDims = LocalContext.current.resources.displayMetrics
+
+
+Surface(modifier = Modifier.height(localDims.heightPixels.dp.times(0.09f))
+    .padding(4.dp)
+, shape = RectangleShape,
+    border = BorderStroke(2.dp, Color.LightGray)
+) {
+    LazyColumn(modifier = Modifier.padding(3.dp)) {
+        item {
+            Text(text = "Details: ${cleanDescription}")
+        }
+    }
+}
     Row(){
         Button(onClick = {}){Text(text = "save")}
         Button(onClick = {navController.navigateUp()}){Text(text = "cancel")}
     }
 }
+
 
