@@ -36,8 +36,13 @@ import androidx.core.text.HtmlCompat
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.libraryreader.components.ReaderAppBar
+import com.example.libraryreader.components.RoundedButton
+import com.example.libraryreader.components.SubmitButton
 import com.example.libraryreader.data.Resource
+import com.example.libraryreader.model.FireBaseBook
 import com.example.libraryreader.model.Item
+import com.example.libraryreader.model.VolumeInfo
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.delay
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -110,10 +115,19 @@ Surface(modifier = Modifier.height(localDims.heightPixels.dp.times(0.09f))
         }
     }
 }
-    Row(){
-        Button(onClick = {}){Text(text = "save")}
-        Button(onClick = {navController.navigateUp()}){Text(text = "cancel")}
+    Row(Modifier.fillMaxWidth().padding(top = 20.dp), horizontalArrangement = Arrangement.SpaceAround){
+        RoundedButton(label = "Save"){
+val book = FireBaseBook()
+            saveToFirebase(book)
+        }
+        RoundedButton(label = "Cancel", onPress = {navController.navigateUp()} )
     }
+}
+
+fun saveToFirebase(
+    book: FireBaseBook
+) {
+    val db = FirebaseFirestore.getInstance()
 }
 
 
