@@ -6,42 +6,38 @@ import java.security.Timestamp
 
 //Firebase Object attributes use camel casing user_id NOT userId, use getters and setters to prepare attributes to camel case so they save properly
 data class FireBaseBook(
-    @Exclude    var id: String?,
-    var title: String,
-    var authors: String,
-    var notes: String,
-
+    @Exclude var id: String? = null,
+    var title: String? = null,
+    var authors: String? = null,
+    var notes: String? = null,
     @get:PropertyName("book_photo_url")
     @set:PropertyName("book_photo_url")
-    var photoUrl: String,
+    var photoUrl: String? = null,
+    var categories: String? = null,
 
-    @get:PropertyName("book_categories")
-    @set:PropertyName("book_categories")
-    var categories: List<String>,
-
-    @get:PropertyName("book_published_date")
-    @set:PropertyName("book_published_date")
-    var publishedDate: String,
-
-    @get:PropertyName("book_page_count")
-    @set:PropertyName("book_page_count")
-    var pageCount: Int,
+    @get:PropertyName("published_date")
+    @set:PropertyName("published_date")
+    var publishedDate: String? = null,
 
     var rating: Double? = null,
+    var description: String? = null,
 
-    @get:PropertyName("book_started_reading")
-    @set:PropertyName("book_started_reading")
+    @get:PropertyName("page_count")
+    @set:PropertyName("page_count")
+    var pageCount: String? = null,
+
+    @get:PropertyName("started_reading_at")
+    @set:PropertyName("started_reading_at")
     var startedReading: Timestamp? = null,
 
-    @get:PropertyName("book_finished_reading")
-    @set:PropertyName("book_finished_reading")
+    @get:PropertyName("finished_reading_at")
+    @set:PropertyName("finished_reading_at")
     var finishedReading: Timestamp? = null,
 
-    @get:PropertyName("book_user_id")
-    @set:PropertyName("book_user_id")
+    @get:PropertyName("user_id")
+    @set:PropertyName("user_id")
     var userId: String? = null,
 
-    @get:PropertyName("book_google_book_id")
-    @set:PropertyName("book_google_book_id")
-    var googleBookId: String? = null
-)
+    @get:PropertyName("google_book_id")
+    @set:PropertyName("google_book_id")
+    var googleBookId: String? = null)

@@ -31,6 +31,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
@@ -47,8 +48,9 @@ import com.example.libraryreader.components.ReaderAppBar
 import com.example.libraryreader.model.Item
 import com.example.libraryreader.navigation.ReaderScreens
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun Search(navController: NavController, viewModel: BookSearchViewModel = hiltViewModel()) {
+fun Search(navController: NavController,           viewModel: BookSearchViewModel = hiltViewModel()) {
 
 
     Scaffold(
@@ -77,14 +79,9 @@ fun Search(navController: NavController, viewModel: BookSearchViewModel = hiltVi
                 SearchForm(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
-                    hint = "Search book by title",
-                    viewModel = viewModel
-                ) { query ->
-                    viewModel.searchBooks(query)
-                    Log.d("TAG", "SearchScreen: $query")
+                        .padding(16.dp)){ searchQuery ->
+                    viewModel.searchBooks(query = searchQuery)
                 }
-
                 BookList(navController = navController, viewModel)
             }
         }
@@ -191,32 +188,31 @@ Column(modifier = Modifier.padding(12.dp).background(Color.Yellow), verticalArra
         }
     }
 }
+@ExperimentalComposeUiApi
 @Composable
-fun SearchForm(modifier: Modifier,
-               viewModel: BookSearchViewModel,
-               loading : Boolean = false,
-               hint: String = "Search",
-               onSearch: (String) -> Unit = {}){
-    Column() {
+fun SearchForm(
+    modifier: Modifier = Modifier,
+    loading: Boolean = false,
+    hint: String = "Search",
+    onSearch: (String) -> Unit = {}) {
+    Column {
         val searchQueryState = rememberSaveable { mutableStateOf("") }
         val keyboardController = LocalSoftwareKeyboardController.current
-        val valid = remember (searchQueryState){
+        val valid = remember(searchQueryState.value) {
             searchQueryState.value.trim().isNotEmpty()
+
         }
 
         InputField(
-            modifier = Modifier.fillMaxWidth(),
             valueState = searchQueryState,
+            modifier = Modifier.fillMaxWidth(),
             labelId = hint,
             enabled = true,
-            isSingleLine = true,
-            onAction = KeyboardActions{
-                if (! valid) return@KeyboardActions
-        onSearch(searchQueryState.value.trim())
-        searchQueryState.value = ""
-        keyboardController?.hide()
-
-            }
-        )
+            onAction = KeyboardActions {
+                if (!valid) return@KeyboardActions
+                onSearch(searchQueryState.value.trim())
+                searchQueryState.value = ""
+                keyboardController?.hide()
+            })
     }
 }

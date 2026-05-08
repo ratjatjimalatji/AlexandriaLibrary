@@ -2,7 +2,6 @@ package com.example.libraryreader.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,6 +11,7 @@ import com.example.libraryreader.screens.ReaderSplashScreen
 import com.example.libraryreader.screens.details.Details
 import com.example.libraryreader.screens.details.DetailsViewModel
 import com.example.libraryreader.screens.home.Home
+import com.example.libraryreader.screens.home.HomeScreenViewModel
 import com.example.libraryreader.screens.login.Login
 import com.example.libraryreader.screens.search.BookSearchViewModel
 import com.example.libraryreader.screens.search.Search
@@ -32,7 +32,8 @@ fun ReaderNavigation() {
         }
 
         composable(ReaderScreens.HomeScreen.name) {
-            Home(navController = navController)
+            val homeViewModel = hiltViewModel<HomeScreenViewModel>()
+            Home(navController = navController, viewModel = homeViewModel)
         }
 
         composable(ReaderScreens.LoginScreen.name) {
@@ -44,9 +45,9 @@ fun ReaderNavigation() {
             Search(navController = navController, viewModel = searchViewModel)
         }
 
-        composable(ReaderScreens.UpdateScreen.name) {
-            Update(navController = navController)
-        }
+//        composable(ReaderScreens.UpdateScreen.name) {
+//            Update(navController = navController,)
+//        }
 
         composable(ReaderScreens.StatsScreen.name) {
             Stats(navController = navController)
@@ -65,5 +66,16 @@ fun ReaderNavigation() {
             }
 
         }
+
+        val updateName = ReaderScreens.UpdateScreen.name
+        composable("$updateName/{bookItemId}",
+        arguments = listOf(navArgument("bookItemId"){
+            type = NavType.StringType
+        })) {navBackStackEntry ->
+
+        navBackStackEntry.arguments?.getString("bookItemId").let{
+            Update(navController = navController, bookItemId =it.toString())
+        }
     }
+}
 }
